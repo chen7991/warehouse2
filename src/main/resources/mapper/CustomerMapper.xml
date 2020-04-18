@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.casic.warehouse2.dao.CustomerDao">
+    <insert id="addCustomer" parameterType="com.casic.warehouse2.bean.Customer">
+        insert into bus_customer (customername, zip, address, telephone, connectionperson, phone, bank, account, email)
+         VALUES (#{customername},#{zip},#{address},#{telephone},#{connectionperson},#{phone},#{bank},#{account},#{email})
+    </insert>
+    <update id="updateCustomer" parameterType="com.casic.warehouse2.bean.Customer">
+        update bus_customer set customername=#{customername},zip=#{zip},address=#{address},telephone=#{telephone},connectionperson=#{connectionperson},
+        phone=#{phone},bank=#{bank},account=#{account},email=#{email} where id=#{id}
+    </update>
+    <delete id="deleteCustomerByIds" parameterType="java.util.List">
+        delete from bus_customer where id in
+        <foreach collection="list" index="index" item="ids" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </delete>
+    <select id="getPageList" resultType="com.casic.warehouse2.bean.Customer">
+        select * from bus_customer
+        <where>
+            <if test="customername != null and customername != ''">
+                 customername like CONCAT('%',#{customername},'%')
+            </if>
+          <if test="telephone != null and telephone != ''">
+              and telephone like CONCAT('%',#{telephone},'%')
+          </if>
+            <if test="connectionperson != null and connectionperson != ''">
+                and connectionperson like CONCAT('%',#{connectionperson},'%')
+            </if>
+        </where>
+         limit ${page} , ${limit}
+    </select>
+    <select id="getCount" resultType="java.lang.Long">
+        select count(*) from bus_customer
+        <where>
+            <if test="customername != null and customername != ''">
+                customername like CONCAT('%',#{customername},'%')
+            </if>
+            <if test="telephone != null and telephone != ''">
+                and telephone like CONCAT('%',#{telephone},'%')
+            </if>
+            <if test="connectionperson != null and connectionperson != ''">
+                and connectionperson like CONCAT('%',#{connectionperson},'%')
+            </if>
+        </where>
+         limit ${page},${limit}
+    </select>
+    <select id="getCustomer" resultType="com.casic.warehouse2.bean.Customer">
+        select *from bus_customer where id=#{id}
+    </select>
+    <select id="allCustomerForList" resultType="com.casic.warehouse2.bean.Customer">
+        select * from bus_customer
+        <where>
+            <if test="customername != null and customername != ''">
+                customername like CONCAT('%',#{customername},'%')
+            </if>
+            <if test="telephone != null and telephone != ''">
+                and telephone like CONCAT('%',#{telephone},'%')
+            </if>
+            <if test="connectionperson != null and connectionperson != ''">
+                and connectionperson like CONCAT('%',#{connectionperson},'%')
+            </if>
+        </where>
+    </select>
+</mapper>
